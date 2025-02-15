@@ -14,18 +14,18 @@ const TODOIST_TOKEN = process.env.TODOIST_API_TOKEN; // Токен для авт
 // Прокси-сервер для передачи запросов в Todoist API
 app.post("/api/todoist/*", async (req, res) => {
   const endpoint = req.url.replace('/api/todoist', ''); // Получаем endpoint из URL запроса
-
+  console.log("start req");
   try {
     // Формируем запрос в Todoist API с добавлением токена в заголовки
     const response = await fetch(`${TODOIST_API_URL}${endpoint}`, {
-      method: req.method,  // Используем метод запроса (GET, POST, и т.д.)
+      method: req.method, // Используем метод запроса (GET, POST, и т.д.)
       headers: {
-        "Authorization": `Bearer ${TODOIST_TOKEN}`,
+        Authorization: `Bearer ${TODOIST_TOKEN}`,
         "Content-Type": "application/json",
       },
       body: req.method === "POST" ? JSON.stringify(req.body) : undefined, // Если это POST, передаем тело запроса
     });
-
+    console.log("req su");
     // Если запрос успешен, отправляем ответ клиенту
     const data = await response.json();
     res.json(data);
