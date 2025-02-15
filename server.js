@@ -15,6 +15,8 @@ const TODOIST_TOKEN = process.env.TODOIST_API_TOKEN;
 app.all("/*", async (req, res) => {
   const apiUrl = `${TODOIST_API_URL}${req.originalUrl}`;
 
+  console.log("Request Headers:", req.headers);
+
   try {
     const response = await fetch(apiUrl, {
       method: req.method,
