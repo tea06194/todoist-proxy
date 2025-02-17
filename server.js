@@ -8,20 +8,26 @@ const app = express();
 app.use(express.json());
 
 // Конфиг API
+const userTokens = {
+  fil:  process.env.FIL_TODOIST_API_TOKEN,
+  tea:  process.env.TEA_TODOIST_API_TOKEN,
+};
+
 const TODOIST_API_URL = "https://api.todoist.com";
-const TODOIST_TOKEN = process.env.TODOIST_API_TOKEN;
 
 // Прокси сервер
 app.all("/*", async (req, res) => {
   const apiUrl = `${TODOIST_API_URL}${req.originalUrl}`;
 
-  console.log("Request Headers:", req.headers);
+  const cookies = req.headers.cookie;
+  const userKey = cookies ? cookies.split(';').find(cookie => cookie.trim().startsWith('username=')).split('=')[1] : null;
+  const token = userTokens[userKey];
 
   try {
     const response = await fetch(apiUrl, {
       method: req.method,
       headers: {
-        Authorization: `Bearer ${TODOIST_TOKEN}`,
+        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body:
