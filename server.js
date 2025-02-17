@@ -9,8 +9,8 @@ app.use(express.json());
 
 // Конфиг API
 const userTokens = {
-  fil:  process.env.FIL_TODOIST_API_TOKEN,
-  tea:  process.env.TEA_TODOIST_API_TOKEN,
+  fil: process.env.FIL_TODOIST_API_TOKEN,
+  tea: process.env.TEA_TODOIST_API_TOKEN,
 };
 
 const TODOIST_API_URL = "https://api.todoist.com";
@@ -20,9 +20,15 @@ app.all("/*", async (req, res) => {
   const apiUrl = `${TODOIST_API_URL}${req.originalUrl}`;
 
   const cookies = req.headers.cookie;
-  const userKey = cookies ? cookies.split(';').find(cookie => cookie.trim().startsWith('username=')).split('=')[1] : null;
+  const userKey = cookies
+    ? cookies
+        .split(";")
+        .find((cookie) => cookie.trim().startsWith("username="))
+        .split("=")[1]
+    : null;
   const token = userTokens[userKey];
-
+  console.log(cookies, userKey);
+  console.log(req.headers);
   try {
     const response = await fetch(apiUrl, {
       method: req.method,
